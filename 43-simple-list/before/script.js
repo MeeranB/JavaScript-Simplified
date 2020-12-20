@@ -13,9 +13,7 @@ form.addEventListener("submit", event => {
   newListItem.classList.add("list-item");
   list.appendChild(newListItem);
   input.value = "";
-});
-
-list.addEventListener("click", event => {
-  const targetToDo = event.target;
-  list.removeChild(targetToDo);
+  newListItem.addEventListener("click", event => {
+    list.removeChild(newListItem);
+  });
 });
