@@ -6,6 +6,11 @@
     * BONUS: The alert (has the id `alert`)
 */
 
+const form = document.querySelector("#quiz-form");
+const input = document.querySelectorAll(".answer");
+const questions = document.querySelectorAll(".question-item");
+const alertDiv = document.querySelector("#alert");
+
 // TODO: 3. Create a submit event listener for the form that does the following.
 //    1. Prevent the default behaviour
 //    2. Get all selected answers (use the `checked` property on the input to determine if it is selected or not)
@@ -14,3 +19,38 @@
 //    5. For each incorrect answer add the class `incorrect` to the parent with the class `question-item` and remove the class `correct`.
 //    6. BONUS: Make sure unanswered questions show up as incorrect. The easiest way to do this is to add the incorrect class and removing the correct class from all question items before checking the correct answers
 //    7. BONUS: If all answers are correct show the element with the id `alert` and hide it after one second (look into setTimeout) (use the class active to show the alert and remove the class to hide it)
+
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  const inputArray = Array.from(input);
+  const questionArray = Array.from(questions);
+  questionArray.forEach(question => {
+    //Unanswered questions are incorrect
+    question.classList.add("incorrect");
+    question.classList.remove("correct");
+  });
+  const chosenInput = inputArray.filter(input => input.checked);
+  chosenInput.forEach(answer => {
+    const respectiveQuestion = answer.closest(".question-item");
+    if (answer.value === "false") {
+      respectiveQuestion.classList.add("incorrect");
+      respectiveQuestion.classList.remove("correct");
+    } else if (answer.value === "true") {
+      respectiveQuestion.classList.add("correct");
+      respectiveQuestion.classList.remove("incorrect");
+    }
+  });
+  const allQuestionsCorrect = questionArray => {
+    const booleanArray = questionArray.filter(question =>
+      Array.from(question.classList).includes("correct")
+    );
+    return booleanArray.length === questionArray.length;
+  };
+
+  if (allQuestionsCorrect(questionArray)) {
+    alertDiv.classList.add("active");
+    setTimeout(() => {
+      alertDiv.classList.remove("active");
+    }, 1000);
+  }
+});
